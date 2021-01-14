@@ -45,11 +45,7 @@ public class UserMealsUtil {
 
         final List<UserMealWithExcess> result = new ArrayList<>();
         for (UserMeal userMeal : meals) {
-            WrapperLocalDateTime userMealDateTime = new WrapperLocalDateTime(userMeal.getDateTime());
-            LocalDateTime startLocalDateTime = LocalDate.from(userMealDateTime).atTime(startTime.getHour(), startTime.getMinute());
-            LocalDateTime endLocalDateTime = LocalDate.from(userMealDateTime).atTime(endTime.getHour(), endTime.getMinute());
-
-            if (userMealDateTime.isAfter(startLocalDateTime) && userMealDateTime.isBefore(endLocalDateTime)) {
+            if (WrapperLocalDateTime.of(userMeal.getDateTime()).isBetween(startTime, endTime)) {
                 int totalCalories = localDateToCaloriesMap.get(userMeal.getDateTime().toLocalDate());
                 result.add(new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), totalCalories > caloriesPerDay));
             }
@@ -63,20 +59,21 @@ public class UserMealsUtil {
             throw new RuntimeException("Start time is after end time.");
         }
         final Map<LocalDate, Integer> localDateToCaloriesMap = new HashMap<>();
-        meals.parallelStream().forEach(userMeal -> localDateToCaloriesMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), Integer::sum));
+        meals.forEach(userMeal -> localDateToCaloriesMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), Integer::sum));
 
         return meals.parallelStream()
-                .filter(userMeal -> {
-                    WrapperLocalDateTime userMealDateTime = new WrapperLocalDateTime(userMeal.getDateTime());
-                    LocalDateTime startLocalDateTime = LocalDate.from(userMealDateTime).atTime(startTime.getHour(), startTime.getMinute());
-                    LocalDateTime endLocalDateTime = LocalDate.from(userMealDateTime).atTime(endTime.getHour(), endTime.getMinute());
-                    return userMealDateTime.isAfter(startLocalDateTime) && userMealDateTime.isBefore(endLocalDateTime);
-                }).map(userMeal -> {
+                .filter(userMeal -> WrapperLocalDateTime.of(userMeal.getDateTime()).isBetween(startTime, endTime))
+                .map(userMeal -> {
                     int totalCalories = localDateToCaloriesMap.get(userMeal.getDateTime().toLocalDate());
                     return new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), totalCalories > caloriesPerDay);
-                }).collect(Collectors.toCollection(ArrayList::new));
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    /**
+     * @param userMealWithExcess - Instance of {@link UserMealWithExcess}
+     * @return The value of the excess field
+     */
     private static boolean getExcessFieldValue(UserMealWithExcess userMealWithExcess) {
         boolean result = false;
         try {
@@ -91,24 +88,28 @@ public class UserMealsUtil {
     }
 
     /**
-     * Print an object and then terminate a colored line.
-     *
-     * @param x         - The object to be printed.
-     * @param ansiColor - ANSI color value the object to be printed.
+     * Print an Object and then terminate a colored line.
+     * @param x         The Object to be printed.
+     * @param ansiColor ANSI color value the object to be printed.
      */
     private static void println(Object x, String ansiColor) {
         System.out.println(ansiColor + x + ConsoleColor.RESET);
     }
 
     /**
-     * Author: Markitanov Vadim
-     * Date: 14.01.2021
-     * Inner wrapper class for method {@link #isAfter(ChronoLocalDateTime)} overriding.
+     * Inner wrapper class for methods {@linkplain #isAfter(ChronoLocalDateTime)} and {@linkplain #isBetween(LocalTime, LocalTime)}.
+     * @author Markitanov Vadim
+     * @since 14.01.2021
      */
     private static class WrapperLocalDateTime implements ChronoLocalDateTime<LocalDate> {
         private final LocalDateTime localDateTime;
 
+        public static WrapperLocalDateTime of(LocalDateTime localDateTime) {
+            return new WrapperLocalDateTime(localDateTime);
+        }
+
         private WrapperLocalDateTime(LocalDateTime localDateTime) {
+            Objects.requireNonNull(localDateTime, "Local date-time is null.");
             this.localDateTime = localDateTime;
         }
 
@@ -160,12 +161,19 @@ public class UserMealsUtil {
             return thisEpDay > otherEpDay ||
                     (thisEpDay == otherEpDay && this.toLocalTime().toNanoOfDay() >= other.toLocalTime().toNanoOfDay());
         }
+
+        public boolean isBetween(LocalTime startTime, LocalTime endTime) {
+            LocalDateTime startLocalDateTime = LocalDate.from(this).atTime(startTime.getHour(), startTime.getMinute());
+            LocalDateTime endLocalDateTime = LocalDate.from(this).atTime(endTime.getHour(), endTime.getMinute());
+
+            return this.isAfter(startLocalDateTime) && this.isBefore(endLocalDateTime);
+        }
     }
 
     /**
-     * Author: Markitanov Vadim
-     * Date: 14.01.2021
      * Util class for ANSI colors.
+     * @author Markitanov Vadim
+     * @since 14.01.2021
      */
     public static class ConsoleColor {
         public static final String RESET = "\u001B[0m";
@@ -176,6 +184,10 @@ public class UserMealsUtil {
         public static final String YELLOW_BOLD = "\033[1;33m";
     }
 
+    /**
+     * @author Markitanov Vadim
+     * @since 14.01.2021
+     */
     @FunctionalInterface
     private interface FilterFunction<T, T1, T2, T3, R> {
         R apply(T t, T1 t1, T2 t2, T3 t3);
