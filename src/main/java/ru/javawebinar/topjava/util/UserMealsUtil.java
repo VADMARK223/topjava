@@ -11,6 +11,9 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
 import java.time.temporal.TemporalUnit;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.util.UserMealsUtil.ConsoleColor.*;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -24,26 +27,11 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
         );
 
-        List<UserMealWithExcess> mealsTo = filteredByCycles(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
-        System.out.println("===========CYCLES===========");
-        mealsTo.forEach(userMealWithExcess -> {
-            boolean excessValue = false;
-            try {
-                Field excessField = UserMealWithExcess.class.getDeclaredField("excess");
-                excessField.setAccessible(true);
-                excessValue = (boolean) excessField.get(userMealWithExcess);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+        println("===========CYCLES===========", YELLOW_BOLD);
+        applyAndPrintResFilteredFunc(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000, UserMealsUtil::filteredByCycles);
 
-            if (excessValue) {
-                System.err.println(userMealWithExcess);
-            } else {
-                System.out.println(userMealWithExcess);
-            }
-        });
-
-//        System.out.println(filteredByStreams(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
+        println("===========STREAMS===========", YELLOW_BOLD);
+        applyAndPrintResFilteredFunc(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000, UserMealsUtil::filteredByStreams);
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
@@ -71,9 +59,45 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO Implement by streams
+        if (startTime.isAfter(endTime)) {
+            throw new RuntimeException("Start time is after end time.");
+        }
+        final Map<LocalDate, Integer> localDateToCaloriesMap = new HashMap<>();
+        meals.parallelStream().forEach(userMeal -> localDateToCaloriesMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), Integer::sum));
 
-        return null;
+        return meals.parallelStream()
+                .filter(userMeal -> {
+                    WrapperLocalDateTime userMealDateTime = new WrapperLocalDateTime(userMeal.getDateTime());
+                    LocalDateTime startLocalDateTime = LocalDate.from(userMealDateTime).atTime(startTime.getHour(), startTime.getMinute());
+                    LocalDateTime endLocalDateTime = LocalDate.from(userMealDateTime).atTime(endTime.getHour(), endTime.getMinute());
+                    return userMealDateTime.isAfter(startLocalDateTime) && userMealDateTime.isBefore(endLocalDateTime);
+                }).map(userMeal -> {
+                    int totalCalories = localDateToCaloriesMap.get(userMeal.getDateTime().toLocalDate());
+                    return new UserMealWithExcess(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), totalCalories > caloriesPerDay);
+                }).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private static boolean getExcessFieldValue(UserMealWithExcess userMealWithExcess) {
+        boolean result = false;
+        try {
+            Field excessField = UserMealWithExcess.class.getDeclaredField("excess");
+            excessField.setAccessible(true);
+            result = (boolean) excessField.get(userMealWithExcess);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /**
+     * Print an object and then terminate a colored line.
+     *
+     * @param x         - The object to be printed.
+     * @param ansiColor - ANSI color value the object to be printed.
+     */
+    private static void println(Object x, String ansiColor) {
+        System.out.println(ansiColor + x + ConsoleColor.RESET);
     }
 
     /**
@@ -136,5 +160,30 @@ public class UserMealsUtil {
             return thisEpDay > otherEpDay ||
                     (thisEpDay == otherEpDay && this.toLocalTime().toNanoOfDay() >= other.toLocalTime().toNanoOfDay());
         }
+    }
+
+    /**
+     * Author: Markitanov Vadim
+     * Date: 14.01.2021
+     * Util class for ANSI colors.
+     */
+    public static class ConsoleColor {
+        public static final String RESET = "\u001B[0m";
+
+        public static final String RED = "\u001B[31m";
+        public static final String GREEN = "\u001B[32m";
+
+        public static final String YELLOW_BOLD = "\033[1;33m";
+    }
+
+    @FunctionalInterface
+    private interface FilterFunction<T, T1, T2, T3, R> {
+        R apply(T t, T1 t1, T2 t2, T3 t3);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static void applyAndPrintResFilteredFunc(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay, FilterFunction<List<UserMeal>, LocalTime, LocalTime, Integer, List<UserMealWithExcess>> function) {
+        function.apply(meals, startTime, endTime, caloriesPerDay)
+                .forEach(userMealWithExcess -> println(userMealWithExcess, getExcessFieldValue(userMealWithExcess) ? RED : GREEN));
     }
 }
