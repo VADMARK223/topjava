@@ -49,9 +49,7 @@ public class UserMealsUtil {
             throw new RuntimeException("Start time is after end time.");
         }
         final Map<LocalDate, Integer> localDateToCaloriesMap = new HashMap<>();
-        for (UserMeal userMeal : meals) {
-            localDateToCaloriesMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), Integer::sum);
-        }
+        meals.forEach(userMeal -> localDateToCaloriesMap.merge(userMeal.getDateTime().toLocalDate(), userMeal.getCalories(), Integer::sum));
 
         final List<UserMealWithExcess> result = new ArrayList<>();
         for (UserMeal userMeal : meals) {
