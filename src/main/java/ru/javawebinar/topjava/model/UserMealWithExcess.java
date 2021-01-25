@@ -9,6 +9,10 @@ public class UserMealWithExcess {
 
     private final int calories;
 
+    public boolean isExcess() {
+        return excess;
+    }
+
     private final boolean excess;
 
     public UserMealWithExcess(LocalDateTime dateTime, String description, int calories, boolean excess) {
