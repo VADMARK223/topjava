@@ -5,7 +5,12 @@
          version="4.0">
 
     <display-name>Topjava</display-name>
+    <context-param>
+        <param-name>username</param-name>
+        <param-value>Vadmark</param-value>
+    </context-param>
 
+    <!--  Users  -->
     <servlet>
         <servlet-name>userServlet</servlet-name>
         <servlet-class>ru.javawebinar.topjava.web.UserServlet</servlet-class>
@@ -14,6 +19,21 @@
     <servlet-mapping>
         <servlet-name>userServlet</servlet-name>
         <url-pattern>/users</url-pattern>
+    </servlet-mapping>
+
+    <!--  Meals  -->
+    <servlet>
+        <servlet-name>mealServlet</servlet-name>
+        <servlet-class>ru.javawebinar.topjava.web.MealServlet</servlet-class>
+
+        <init-param>
+            <param-name>greeting</param-name>
+            <param-value>Welcome</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mealServlet</servlet-name>
+        <url-pattern>/meals</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -60,6 +60,25 @@
             <version>4.0.1</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--    DevTools    -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <version>2.4.2</version>
+        </dependency>
+
+        <!--    Standard Tag Library    -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+        </dependency>-->
     </dependencies>
 
     <profiles>
