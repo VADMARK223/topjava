@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -23,29 +22,40 @@ public class MealCardServlet extends HttpServlet {
     private static final Logger log = getLogger(MealCardServlet.class);
     private final TopjavaRepository<Meal, Long> mealRepository = new MealRepository();
 
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        log.debug("Redirect meal card.");
-        resp.sendRedirect("meal-card.jsp");
+        Long cardId = req.getParameter("id") != null ? Long.parseLong(req.getParameter("id")) : -1L;
+        log.debug("Redirect meal card: id={}.", cardId);
+        Meal meal = mealRepository.findById(cardId).orElse(new Meal(-1L, LocalDateTime.now(), "New", 0));
+        req.setAttribute("meal", meal);
+        req.getRequestDispatcher("/meal-card.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String datetime = req.getParameter("datetime");
+        if (req.getCharacterEncoding() == null) {
+            req.setCharacterEncoding("UTF-8");
+        }
+
+        long id = Long.parseLong(req.getParameter("id"));
+        LocalDateTime datetime = LocalDateTime.parse(req.getParameter("datetime"));
         String description = req.getParameter("description");
-        String calories = req.getParameter("calories");
+        int calories = Integer.parseInt(req.getParameter("calories"));
 
-        log.debug("Post in meal card: datetime={}, description={}, calories={}. ", datetime, description, calories);
+        log.debug("Post in meal card: id={}, datetime={}, description={}, calories={}. ", id, datetime, description, calories);
 
-        System.out.println("mealRepository.findAll().size(): " + mealRepository.findAll().size());
-
-        Optional<Meal> mealOptional = mealRepository.findById(2L);
-        if (mealOptional.isPresent()) {
-            Meal meal = mealOptional.get();
-            meal.setDescription(description);
+        if (id == -1) {
+            log.debug("Create new");
+            Meal meal = new Meal(999L, datetime, description, calories);
             mealRepository.save(meal);
         } else {
-            mealRepository.save(new Meal(99L, LocalDateTime.now(), "New", 123));
+            log.debug("Update");
+            mealRepository.findById(id).ifPresent(meal -> {
+                meal.setDateTime(datetime);
+                meal.setDescription(description);
+                meal.setCalories(calories);
+            });
         }
 
         resp.sendRedirect("meals");

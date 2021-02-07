@@ -3,7 +3,7 @@
   Date: 06.02.2021
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <jsp:useBean id="meals" scope="request" type="java.util.List<ru.javawebinar.topjava.model.MealTo>"/>
 <html>
 <head>
@@ -15,6 +15,18 @@
 
         td, th {
             border: 1px solid black;
+        }
+
+        .btn-link {
+            border: none;
+            outline: none;
+            background: none;
+            cursor: pointer;
+            color: #0000EE;
+            padding: 0;
+            text-decoration: underline;
+            font-family: inherit;
+            font-size: inherit;
         }
     </style>
     <script>
@@ -61,9 +73,8 @@
                     ${meal.calories}
             </td>
             <td>
-                <form id="form-update-${meal.id}" action="meals?id=${meal.id}" method="post">
-                    <a href="javascript:"
-                       onclick="document.getElementById('form-update-${meal.id}').submit();">Update</a>
+                <form action="meal-card" method="get">
+                    <button class="btn-link" type="submit" name="id" value="${meal.id}">Update</button>
                 </form>
             </td>
             <td>

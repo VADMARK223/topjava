@@ -28,14 +28,13 @@ public class MealRepository implements TopjavaRepository<Meal, Long> {
 
     @Override
     public <S extends Meal> S save(S entity) {
-        if (meals.contains(entity)) {
-            System.out.println("CONTAIN");
-            Meal meal = meals.get(meals.indexOf(entity));
-        } else {
-            meals.add(entity);
-            System.out.println("AAAAAAAAAAAAAADDDDD: " + meals.size());
+        if (findById(entity.getId()).isPresent()) {
+            throw new RuntimeException(String.format("No meal entity with %s exists!", entity.getId()));
         }
-        return null;
+
+        meals.add(entity);
+
+        return entity;
     }
 
     private void delete(Meal meal) {

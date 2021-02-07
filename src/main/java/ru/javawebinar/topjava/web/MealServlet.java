@@ -35,7 +35,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        log.debug("Post meal: " + req.getParameter("id"));
+
     }
 
     @Override
