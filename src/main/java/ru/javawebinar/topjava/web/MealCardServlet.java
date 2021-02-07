@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealRepository;
 import ru.javawebinar.topjava.service.TopjavaRepository;
+import ru.javawebinar.topjava.util.IdUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -47,7 +48,7 @@ public class MealCardServlet extends HttpServlet {
 
         if (id == -1) {
             log.debug("Create new");
-            Meal meal = new Meal(999L, datetime, description, calories);
+            Meal meal = new Meal(IdUtil.getId(), datetime, description, calories);
             mealRepository.save(meal);
         } else {
             log.debug("Update");

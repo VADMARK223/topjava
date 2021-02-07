@@ -52,6 +52,7 @@
 <table style="border: 1px solid">
     <thead>
     <tr style="border: 1px solid">
+        <th>Id</th>
         <th>Date</th>
         <th>Description</th>
         <th>Calories</th>
@@ -63,6 +64,9 @@
     <tbody>
     <c:forEach var="meal" items="${meals}">
         <tr style="color: ${meal.excess ? 'red' : 'green'}">
+            <td>
+                    ${meal.id}
+            </td>
             <td>
                     ${meal.formattedDateTime}
             </td>

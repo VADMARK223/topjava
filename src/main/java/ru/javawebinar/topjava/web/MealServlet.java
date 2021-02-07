@@ -34,11 +34,6 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-
-    }
-
-    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         StringBuilder stringBuilder = new StringBuilder();
         try (BufferedReader reader = req.getReader()) {
