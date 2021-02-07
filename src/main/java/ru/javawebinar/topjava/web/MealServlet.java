@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.service.MealRepository;
@@ -9,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -30,14 +32,37 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         log.debug("Post meal: " + req.getParameter("id"));
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long mealId = Long.valueOf(req.getParameter("id"));
-        log.debug("Delete meal: " + mealId);
-        mealRepository.deleteById(mealId);
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader reader = req.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+        } catch (Exception exception) {
+            log.error("Error: " + exception.getMessage());
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        MealRequest request = null;
+        try {
+            request = objectMapper.readValue(stringBuilder.toString(), MealRequest.class);
+            log.debug("Remove meal({}).", request.getId());
+        } catch (Exception exception) {
+            log.error("Error parse request: " + exception.getMessage());
+        }
+
+        if (request != null) {
+            try {
+                mealRepository.deleteById(request.getId());
+            } catch (Exception exception) {
+                log.error("Error meal delete: " + exception.getMessage());
+            }
+        }
     }
 }

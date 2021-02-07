@@ -21,15 +21,14 @@
         function deleteMeal(id) {
             console.log("Delete meal #" + id);
             const xhr = new XMLHttpRequest();
-            const url = "http://localhost:8080/topjava/meals";
-            xhr.open("DELETE", url + "?id=" + id);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.open("DELETE", "meals");
             xhr.onreadystatechange = function () {
-                if(xhr.status === 200) {
+                if (xhr.status === 200) {
                     location.reload();
                 }
             };
-            xhr.send(null);
+            const request = {"id": id};
+            xhr.send(JSON.stringify(request));
         }
     </script>
 </head>
@@ -64,7 +63,8 @@
             </td>
             <td>
                 <form id="form-update-${meal.id}" action="meals?id=${meal.id}" method="post">
-                    <a href="javascript:" onclick="document.getElementById('form-update-${meal.id}').submit();">Update</a>
+                    <a href="javascript:"
+                       onclick="document.getElementById('form-update-${meal.id}').submit();">Update</a>
                 </form>
             </td>
             <td>
