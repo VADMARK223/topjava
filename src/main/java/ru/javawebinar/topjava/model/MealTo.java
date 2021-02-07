@@ -1,10 +1,13 @@
 package ru.javawebinar.topjava.model;
 
+import ru.javawebinar.topjava.util.TimeUtil;
+
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class MealTo {
+
     private final Long id;
+
     public Long getId() {
         return id;
     }
@@ -12,16 +15,19 @@ public class MealTo {
     private final LocalDateTime dateTime;
 
     private final String description;
+
     public String getDescription() {
         return description;
     }
 
     private final int calories;
+
     public int getCalories() {
         return calories;
     }
 
     private final boolean excess;
+
     public boolean isExcess() {
         return excess;
     }
@@ -35,7 +41,7 @@ public class MealTo {
     }
 
     public String getFormattedDateTime() {
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(this.dateTime);
+        return TimeUtil.formatter.format(this.dateTime);
     }
 
     @Override
