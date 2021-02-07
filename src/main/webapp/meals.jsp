@@ -15,6 +15,8 @@
 
         td, th {
             border: 1px solid black;
+            text-align: center;
+            padding: 5px;
         }
 
         .btn-link {
@@ -27,6 +29,10 @@
             text-decoration: underline;
             font-family: inherit;
             font-size: inherit;
+        }
+
+        form {
+            margin-bottom: 0;
         }
     </style>
     <script>
@@ -52,12 +58,12 @@
 <table style="border: 1px solid">
     <thead>
     <tr style="border: 1px solid">
-        <th>Id</th>
-        <th>Date</th>
-        <th>Description</th>
-        <th>Calories</th>
-        <th></th>
-        <th></th>
+        <th style="width: 140px; align-content: center">Id</th>
+        <th style="width: 140px; align-items: center">Date</th>
+        <th style="width: 300px">Description</th>
+        <th style="width: 80px">Calories</th>
+        <th style="width: 60px"></th>
+        <th style="width: 60px"></th>
     </tr>
     </thead>
 
@@ -70,7 +76,7 @@
             <td>
                     ${meal.formattedDateTime}
             </td>
-            <td>
+            <td style="text-align: left;">
                     ${meal.description}
             </td>
             <td>

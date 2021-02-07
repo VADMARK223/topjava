@@ -34,7 +34,7 @@ public class MealCardServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (req.getCharacterEncoding() == null) {
             req.setCharacterEncoding("UTF-8");
         }
@@ -47,11 +47,9 @@ public class MealCardServlet extends HttpServlet {
         log.debug("Post in meal card: id={}, datetime={}, description={}, calories={}. ", id, datetime, description, calories);
 
         if (id == -1) {
-            log.debug("Create new");
             Meal meal = new Meal(IdUtil.getId(), datetime, description, calories);
             mealRepository.save(meal);
         } else {
-            log.debug("Update");
             mealRepository.findById(id).ifPresent(meal -> {
                 meal.setDateTime(datetime);
                 meal.setDescription(description);
