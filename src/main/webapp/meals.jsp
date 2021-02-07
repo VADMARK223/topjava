@@ -53,6 +53,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
+<h2>Meals</h2>
 <a href="meal-card">Add meal</a>
 
 <table style="border: 1px solid">
