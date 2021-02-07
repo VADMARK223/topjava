@@ -25,15 +25,20 @@
     <servlet>
         <servlet-name>mealServlet</servlet-name>
         <servlet-class>ru.javawebinar.topjava.web.MealServlet</servlet-class>
-
-        <init-param>
-            <param-name>greeting</param-name>
-            <param-value>Welcome</param-value>
-        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>mealServlet</servlet-name>
         <url-pattern>/meals</url-pattern>
+    </servlet-mapping>
+
+    <!--  Meal card  -->
+    <servlet>
+        <servlet-name>meal-card</servlet-name>
+        <servlet-class>ru.javawebinar.topjava.web.MealCardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>meal-card</servlet-name>
+        <url-pattern>/meal-card</url-pattern>
     </servlet-mapping>
 
 </web-app>

@@ -1,10 +1,10 @@
-<jsp:useBean id="username" scope="request" type="java.lang.String"/>
 <%--
   User: v.markitanov
   Date: 06.02.2021
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<jsp:useBean id="meals" scope="request" type="java.util.List<ru.javawebinar.topjava.model.MealTo>"/>
 <html>
 <head>
     <title>Meals</title>
@@ -35,8 +35,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h1>Hello, ${username}</h1>
-<jsp:useBean id="meals" scope="request" type="java.util.List<ru.javawebinar.topjava.model.MealTo>"/>
+<a href="meal-card">Add meal</a>
 
 <table style="border: 1px solid">
     <thead>
@@ -51,7 +50,7 @@
 
     <tbody>
     <c:forEach var="meal" items="${meals}">
-        <tr>
+        <tr style="color: ${meal.excess ? 'red' : 'green'}">
             <td>
                     ${meal.formattedDateTime}
             </td>

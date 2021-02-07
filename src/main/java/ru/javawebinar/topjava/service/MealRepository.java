@@ -1,42 +1,46 @@
 package ru.javawebinar.topjava.service;
 
-import org.springframework.util.Assert;
-import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.MealsUtil;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * @author Markitanov Vadim
- * @since 06.02.2021
+ * @since 07.02.2021
  */
-public class MealRepository implements TopjavaRepository<MealTo, Long> {
-    private final int caloriesPerDay = 150;
-    private final List<MealTo> meals = new ArrayList<>();
-
-    public MealRepository() {
-        meals.add(new MealTo(1L, LocalDateTime.now(), "Test1", 100, true));
-        meals.add(new MealTo(2L, LocalDateTime.now(), "Test2", 200, true));
-    }
+public class MealRepository implements TopjavaRepository<Meal, Long> {
+    private final List<Meal> meals = MealsUtil.initMeals();
 
     @Override
-    public List<MealTo> findAll() {
+    public List<Meal> findAll() {
         return meals;
     }
 
     @Override
-    public Optional<MealTo> findById(Long id) {
-        return meals.parallelStream().filter(mealTo -> mealTo.getId().equals(id)).findFirst();
+    public Optional<Meal> findById(Long id) {
+        return meals.parallelStream().filter(meal -> meal.getId().equals(id)).findFirst();
     }
 
     @Override
     public void deleteById(Long id) {
-        delete(findById(id).orElseThrow(() -> new RuntimeException(String.format("No mealTo entity with %s exists!", id))));
+        delete(findById(id).orElseThrow(() -> new RuntimeException(String.format("No meal entity with %s exists!", id))));
     }
 
-    private void delete(MealTo mealTo) {
-        meals.removeIf(mealTo1 -> mealTo1.getId().equals(mealTo.getId()));
+    @Override
+    public <S extends Meal> S save(S entity) {
+        if (meals.contains(entity)) {
+            System.out.println("CONTAIN");
+            Meal meal = meals.get(meals.indexOf(entity));
+        } else {
+            meals.add(entity);
+            System.out.println("AAAAAAAAAAAAAADDDDD: " + meals.size());
+        }
+        return null;
+    }
+
+    private void delete(Meal meal) {
+        meals.removeIf(mealItem -> mealItem.getId().equals(meal.getId()));
     }
 }

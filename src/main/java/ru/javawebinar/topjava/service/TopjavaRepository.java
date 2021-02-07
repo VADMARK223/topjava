@@ -9,6 +9,10 @@ import java.util.Optional;
  */
 public interface TopjavaRepository<E, ID> {
     List<E> findAll();
+
     Optional<E> findById(ID id);
+
     void deleteById(ID id);
+
+    <S extends E> S save(S entity);
 }
