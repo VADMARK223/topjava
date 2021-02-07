@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
+import static ru.javawebinar.topjava.util.MealsUtil.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,8 +11,6 @@ import java.util.Optional;
  * @since 07.02.2021
  */
 public class MealRepository implements TopjavaRepository<Meal, Long> {
-    private final List<Meal> meals = MealsUtil.initMeals();
-
     @Override
     public List<Meal> findAll() {
         return meals;

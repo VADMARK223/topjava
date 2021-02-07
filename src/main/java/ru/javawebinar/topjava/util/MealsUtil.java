@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unused")
 public class MealsUtil {
     public static final int CALORIES_PER_DAY = 2000;
+    public static final List<Meal> meals = initMeals();
 
-    public static List<Meal> initMeals() {
+    private static List<Meal> initMeals() {
         return new ArrayList<>(Arrays.asList(
                 new Meal(1L, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
                 new Meal(2L, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
