@@ -7,10 +7,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.IdUtil.getId;
@@ -21,7 +21,7 @@ public class MealsUtil {
     public static final List<Meal> meals = initMeals();
 
     private static List<Meal> initMeals() {
-        return new ArrayList<>(Arrays.asList(
+        return new CopyOnWriteArrayList<>(Arrays.asList(
                 new Meal(getId(), LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
                 new Meal(getId(), LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
                 new Meal(getId(), LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
