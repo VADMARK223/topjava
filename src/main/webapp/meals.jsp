@@ -58,7 +58,6 @@
 <table style="border: 1px solid">
     <thead>
     <tr style="border: 1px solid">
-        <th style="width: 140px; align-content: center">Id</th>
         <th style="width: 140px; align-items: center">Date</th>
         <th style="width: 300px">Description</th>
         <th style="width: 80px">Calories</th>
@@ -70,9 +69,6 @@
     <tbody>
     <c:forEach var="meal" items="${meals}">
         <tr style="color: ${meal.excess ? 'red' : 'green'}">
-            <td>
-                    ${meal.id}
-            </td>
             <td>
                     ${meal.formattedDateTime}
             </td>
@@ -88,11 +84,9 @@
                 </form>
             </td>
             <td>
-                <a onclick="deleteMeal(${meal.id});">
-                    <span>
-                        <button>Delete</button>
-                    </span>
-                </a>
+                <form action="meal-delete" method="post">
+                    <button class="btn-link" type="submit" name="id" value="${meal.id}">Delete</button>
+                </form>
             </td>
         </tr>
     </c:forEach>

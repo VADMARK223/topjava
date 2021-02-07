@@ -41,4 +41,14 @@
         <url-pattern>/meal-card</url-pattern>
     </servlet-mapping>
 
+    <!--  Meal delete  -->
+    <servlet>
+        <servlet-name>meal-delete</servlet-name>
+        <servlet-class>ru.javawebinar.topjava.web.MealDeleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>meal-delete</servlet-name>
+        <url-pattern>/meal-delete</url-pattern>
+    </servlet-mapping>
+
 </web-app>

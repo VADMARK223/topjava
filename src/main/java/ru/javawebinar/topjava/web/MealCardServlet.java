@@ -59,6 +59,4 @@ public class MealCardServlet extends HttpServlet {
 
         resp.sendRedirect("meals");
     }
-
-
 }
