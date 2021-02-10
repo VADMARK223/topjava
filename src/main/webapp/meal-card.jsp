@@ -11,7 +11,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>${meal.id == -1 ? 'Create new meal' : 'Edit meal'}</h2>
+<h2>${meal.id == null ? 'Create new meal' : 'Edit meal'}</h2>
 
 <form action="meal-card" method="post">
     <input name="id" type="hidden" value="${meal.id}">

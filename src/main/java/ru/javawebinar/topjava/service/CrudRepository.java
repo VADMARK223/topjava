@@ -7,12 +7,12 @@ import java.util.Optional;
  * @author Markitanov Vadim
  * @since 06.02.2021
  */
-public interface TopjavaRepository<E, ID> {
+public interface CrudRepository<E, ID> {
     List<E> findAll();
 
     Optional<E> findById(ID id);
 
-    void deleteById(ID id);
+    boolean deleteById(ID id);
 
-    <S extends E> S save(S entity);
+    boolean create(E entity);
 }

@@ -2,8 +2,9 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealRepository;
-import ru.javawebinar.topjava.service.TopjavaRepository;
+import ru.javawebinar.topjava.service.MealCrudRepository;
+import ru.javawebinar.topjava.service.CrudRepository;
+import ru.javawebinar.topjava.util.TimeUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,12 +23,13 @@ import static ru.javawebinar.topjava.util.MealsUtil.filteredByStreams;
  */
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
-    private final TopjavaRepository<Meal, Long> mealRepository = new MealRepository();
+    private final CrudRepository<Meal, Long> mealRepository = new MealCrudRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.debug("Redirect to meals.");
         req.setAttribute("meals", filteredByStreams(mealRepository.findAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
+        req.setAttribute("formatter", TimeUtil.formatter);
         req.getRequestDispatcher("/meals.jsp").forward(req, resp);
     }
 }
