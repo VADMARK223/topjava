@@ -14,7 +14,7 @@ public interface CrudRepository<E, ID> {
 
     boolean deleteById(ID id);
 
-    boolean create(E entity);
+    E create(E entity);
 
-    ID generateID();
+    E update(E entity);
 }

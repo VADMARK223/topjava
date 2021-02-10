@@ -3,7 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.CrudRepository;
-import ru.javawebinar.topjava.service.MealCrudRepository;
+import ru.javawebinar.topjava.service.MealInMemoryCrudRepository;
 import ru.javawebinar.topjava.util.TimeUtil;
 
 import javax.servlet.ServletException;
@@ -25,7 +25,13 @@ import static ru.javawebinar.topjava.util.MealsUtil.filteredByStreams;
  */
 public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(MealServlet.class);
-    private final CrudRepository<Meal, Long> mealRepository = new MealCrudRepository();
+    private CrudRepository<Meal, Long> mealRepository;
+
+    @Override
+    public void init() {
+        log.debug("Init.");
+        mealRepository = new MealInMemoryCrudRepository();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -65,14 +71,11 @@ public class MealServlet extends HttpServlet {
             log.debug("Post in meal card: id={}, datetime={}, description={}, calories={}. ", id, datetime, description, calories);
 
             if (id == null) {
-                Meal meal = new Meal(datetime, description, calories);
-                log.debug("Create meal result: {}.", mealRepository.create(meal));
+                log.debug("Create meal result: {}.", mealRepository.create(new Meal(datetime, description, calories)));
             } else {
-                mealRepository.findById(id).ifPresent(meal -> {
-                    meal.setDateTime(datetime);
-                    meal.setDescription(description);
-                    meal.setCalories(calories);
-                });
+                mealRepository.update(new Meal(datetime, description, calories).setId(id));
+
+
             }
 
             resp.sendRedirect("meals");
