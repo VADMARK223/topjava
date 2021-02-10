@@ -15,21 +15,20 @@ import java.util.concurrent.atomic.AtomicLong;
  * @since 07.02.2021
  */
 public class MealCrudRepository implements CrudRepository<Meal, Long> {
-    private static final AtomicLong counter = new AtomicLong(0);
-    private static final List<Meal> meals = initMeals();
+    private final AtomicLong counter = new AtomicLong(0);
+    private final List<Meal> meals = initMeals();
 
-    private static List<Meal> initMeals() {
+    private List<Meal> initMeals() {
         return new CopyOnWriteArrayList<>(Arrays.asList(
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500).setId(counter.getAndIncrement()),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000).setId(counter.getAndIncrement()),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500).setId(counter.getAndIncrement()),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100).setId(counter.getAndIncrement()),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000).setId(counter.getAndIncrement()),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500).setId(counter.getAndIncrement()),
-                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410).setId(counter.getAndIncrement())
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500).setId(generateID()),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000).setId(generateID()),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500).setId(generateID()),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100).setId(generateID()),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000).setId(generateID()),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500).setId(generateID()),
+                new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410).setId(generateID())
         ));
     }
-
 
     @Override
     public List<Meal> findAll() {
@@ -55,6 +54,11 @@ public class MealCrudRepository implements CrudRepository<Meal, Long> {
 
         meals.add(entity);
         return true;
+    }
+
+    @Override
+    public Long generateID() {
+        return counter.getAndIncrement();
     }
 
     private boolean delete(Meal meal) {

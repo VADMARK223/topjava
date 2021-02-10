@@ -41,7 +41,9 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
-<a href="meal-card">Add meal</a>
+<form action="meals" method="get">
+    <button class="btn-link" type="submit" name="action" value="card">Add meal</button>
+</form>
 
 <table style="border: 1px solid">
     <thead>
@@ -67,12 +69,14 @@
                     ${meal.calories}
             </td>
             <td>
-                <form action="meal-card" method="get">
+                <form action="meals" method="get">
+                    <input type="hidden" name="action" value="card">
                     <button class="btn-link" type="submit" name="id" value="${meal.id}">Update</button>
                 </form>
             </td>
             <td>
-                <form action="meal-delete" method="post">
+                <form action="meals" method="post">
+                    <input type="hidden" name="action" value="delete">
                     <button class="btn-link" type="submit" name="id" value="${meal.id}">Delete</button>
                 </form>
             </td>

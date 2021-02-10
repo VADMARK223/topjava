@@ -26,25 +26,4 @@
         <servlet-name>mealServlet</servlet-name>
         <url-pattern>/meals</url-pattern>
     </servlet-mapping>
-
-    <!--  Meal card  -->
-    <servlet>
-        <servlet-name>meal-card</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.MealCardServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>meal-card</servlet-name>
-        <url-pattern>/meal-card</url-pattern>
-    </servlet-mapping>
-
-    <!--  Meal delete  -->
-    <servlet>
-        <servlet-name>meal-delete</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.MealDeleteServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>meal-delete</servlet-name>
-        <url-pattern>/meal-delete</url-pattern>
-    </servlet-mapping>
-
 </web-app>

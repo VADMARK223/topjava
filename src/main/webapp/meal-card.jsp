@@ -13,8 +13,9 @@
 <hr>
 <h2>${meal.id == null ? 'Create new meal' : 'Edit meal'}</h2>
 
-<form action="meal-card" method="post">
+<form action="meals" method="post">
     <input name="id" type="hidden" value="${meal.id}">
+    <input name="action" type="hidden" value="add-meal">
 
     <table>
         <tbody>
