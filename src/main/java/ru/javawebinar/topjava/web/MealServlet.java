@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.CrudRepository;
 import ru.javawebinar.topjava.service.MealInMemoryCrudRepository;
-import ru.javawebinar.topjava.util.TimeUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,7 +44,6 @@ public class MealServlet extends HttpServlet {
             req.getRequestDispatcher("/meal-card.jsp").forward(req, resp);
         } else {
             req.setAttribute("meals", filteredByStreams(mealRepository.findAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
-            req.setAttribute("formatter", TimeUtil.formatter);
             req.getRequestDispatcher("/meals.jsp").forward(req, resp);
         }
     }

@@ -1,11 +1,10 @@
-<%--
+<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %><%--
   User: v.markitanov
   Date: 06.02.2021
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" %>
 <jsp:useBean id="meals" scope="request" type="java.util.List<ru.javawebinar.topjava.model.MealTo>"/>
-<jsp:useBean id="formatter" scope="request" type="java.time.format.DateTimeFormatter"/>
 <html>
 <head>
     <title>Meals</title>
@@ -58,9 +57,10 @@
 
     <tbody>
     <c:forEach var="meal" items="${meals}">
+        <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
         <tr style="color: ${meal.excess ? 'red' : 'green'}">
             <td>
-                    ${meal.dateTime.format(formatter)}
+                <%=meal.getDateTime().format(TimeUtil.formatter)%>
             </td>
             <td style="text-align: left;">
                     ${meal.description}
