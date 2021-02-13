@@ -1,3 +1,6 @@
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.Comparator" %>
+<%@ page import="ru.javawebinar.topjava.model.Meal" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -33,8 +36,10 @@
             <th></th>
         </tr>
         </thead>
+<%--        <jsp:useBean id="meals" scope="request" type="java.util.List<ru.javawebinar.topjava.model.Meal>"/>--%>
+<%--        <% meals.sort(Comparator.comparing(Meal::getCalories));%>--%>
         <c:forEach items="${meals}" var="meal">
-            <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
+            <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
             <tr class="${meal.excess ? 'excess' : 'normal'}">
                 <td>
                         <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
