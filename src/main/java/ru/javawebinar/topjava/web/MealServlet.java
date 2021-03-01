@@ -42,10 +42,11 @@ public class MealServlet extends HttpServlet {
         Integer mealId = id == null || id.isEmpty() ? null : Integer.valueOf(id);
         log.info("Post for mealId: {}.", mealId);
         Meal meal = new Meal(mealId,
-                authUserId(),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+                Integer.parseInt(request.getParameter("calories")),
+                authUserId()
+        );
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         mealRestController.update(meal);
@@ -66,7 +67,7 @@ public class MealServlet extends HttpServlet {
             case "create":
             case "update":
                 final Meal meal = "create".equals(action) ?
-                        new Meal(authUserId(), LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", authUserCaloriesPerDay()) :
+                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", authUserCaloriesPerDay(), authUserId()) :
                         mealRestController.get(getId(request));
                 if (meal == null) {
                     log.info("Meal is null! Redirect to meals.");
